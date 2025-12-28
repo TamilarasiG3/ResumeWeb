@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Professional Resume Builder</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  font-family: "Times New Roman", Georgia, serif;
+  background: #eaeaea;
+  padding: 30px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.box {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+}
+
+textarea {
+  height: 90px;
+}
+
+button {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  background: #000;
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* Resume styling */
+.resume {
+  padding: 40px;
+  color: #000;
+}
+
+.header {
+  text-align: center;
+  border-bottom: 2px solid #000;
+  padding-bottom: 15px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 30px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.section {
+  margin-top: 22px;
+}
+
+.section h2 {
+  font-size: 18px;
+  border-bottom: 1px solid #000;
+  text-transform: uppercase;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+@media print {
+  body {
+    background: none;
+    padding: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- FORM -->
+<div class="box">
+  <h2>Enter Resume Details</h2>
+
+  <input id="name" placeholder="Full Name">
+  <input id="email" placeholder="Email">
+  <input id="phone" placeholder="Phone">
+  <textarea id="summary" placeholder="Professional Summary"></textarea>
+  <textarea id="education" placeholder="Education"></textarea>
+  <textarea id="experience" placeholder="Experience"></textarea>
+  <textarea id="skills" placeholder="Skills (comma separated)"></textarea>
+
+  <button onclick="buildResume()">Build Resume</button>
+</div>
+
+<!-- RESUME PREVIEW -->
+<div class="box resume" id="resume">
+
+  <div class="header">
+    <h1 id="r-name"></h1>
+    <p id="r-contact"></p>
+  </div>
+
+  <div class="section">
+    <h2>Professional Summary</h2>
+    <p id="r-summary"></p>
+  </div>
+
+  <div class="section">
+    <h2>Education</h2>
+    <p id="r-education"></p>
+  </div>
+
+  <div class="section">
+    <h2>Experience</h2>
+    <p id="r-experience"></p>
+  </div>
+
+  <div class="section">
+    <h2>Skills</h2>
+    <ul id="r-skills"></ul>
+  </div>
+
+</div>
+
+</div>
+
+<!-- DOWNLOAD BUTTON -->
+<button onclick="downloadPDF()">Download Resume as PDF</button>
+
+<!-- PDF LIBRARY -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+<script>
+function buildResume() {
+  document.getElementById("r-name").innerText =
+    document.getElementById("name").value;
+
+  document.getElementById("r-contact").innerText =
+    document.getElementById("email").value + " | " +
+    document.getElementById("phone").value;
+
+  document.getElementById("r-summary").innerText =
+    document.getElementById("summary").value;
+
+  document.getElementById("r-education").innerText =
+    document.getElementById("education").value;
+
+  document.getElementById("r-experience").innerText =
+    document.getElementById("experience").value;
+
+  const skillsList = document.getElementById("r-skills");
+  skillsList.innerHTML = "";
+
+  document.getElementById("skills").value.split(",").forEach(skill => {
+    const li = document.createElement("li");
+    li.textContent = skill.trim();
+    skillsList.appendChild(li);
+  });
+}
+
+function downloadPDF() {
+  const resume = document.getElementById("resume");
+
+  html2pdf()
+    .from(resume)
+    .set({
+      margin: 10,
+      filename: "Professional_Resume.pdf",
+      html2canvas: { scale: 2 },
+      jsPDF: { format: "a4", orientation: "portrait" }
+    })
+    .save(); // automatic download
+}
+</script>
+
+</body>
+</html>
